@@ -27,6 +27,8 @@
     --accent: 160 50% 45%;
     --accent-foreground: 0 0% 100%;
 
+    --rating: 45 93% 47%;
+
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
@@ -67,6 +69,8 @@
 
     --accent: 160 50% 50%;
     --accent-foreground: 0 0% 100%;
+
+    --rating: 45 93% 58%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;

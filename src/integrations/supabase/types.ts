@@ -14,89 +14,264 @@ export type Database = {
   }
   public: {
     Tables: {
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          project_id: string | null
+          read_at: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          project_id?: string | null
+          read_at?: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          project_id?: string | null
+          read_at?: string | null
+          recipient_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      milestones: {
+        Row: {
+          amount: number | null
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          project_id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          project_id: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          project_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "milestones_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          milestone_id: string | null
+          payee_id: string
+          payer_id: string
+          project_id: string
+          status: string
+          stripe_payment_intent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          milestone_id?: string | null
+          payee_id: string
+          payer_id: string
+          project_id: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          milestone_id?: string | null
+          payee_id?: string
+          payer_id?: string
+          project_id?: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "milestones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           availability: string | null
           avatar_url: string | null
           bio: string | null
           company_name: string | null
+          completed_projects: number | null
           created_at: string
+          email_verified: boolean | null
           full_name: string
           hourly_rate: number | null
           id: string
+          identity_verified: boolean | null
+          languages: string[] | null
+          location: string | null
           portfolio_url: string | null
+          rating_avg: number | null
+          review_count: number | null
           skills: string[] | null
+          title: string | null
           updated_at: string
           user_id: string
+          verification_submitted_at: string | null
         }
         Insert: {
           availability?: string | null
           avatar_url?: string | null
           bio?: string | null
           company_name?: string | null
+          completed_projects?: number | null
           created_at?: string
+          email_verified?: boolean | null
           full_name?: string
           hourly_rate?: number | null
           id?: string
+          identity_verified?: boolean | null
+          languages?: string[] | null
+          location?: string | null
           portfolio_url?: string | null
+          rating_avg?: number | null
+          review_count?: number | null
           skills?: string[] | null
+          title?: string | null
           updated_at?: string
           user_id: string
+          verification_submitted_at?: string | null
         }
         Update: {
           availability?: string | null
           avatar_url?: string | null
           bio?: string | null
           company_name?: string | null
+          completed_projects?: number | null
           created_at?: string
+          email_verified?: boolean | null
           full_name?: string
           hourly_rate?: number | null
           id?: string
+          identity_verified?: boolean | null
+          languages?: string[] | null
+          location?: string | null
           portfolio_url?: string | null
+          rating_avg?: number | null
+          review_count?: number | null
           skills?: string[] | null
+          title?: string | null
           updated_at?: string
           user_id?: string
+          verification_submitted_at?: string | null
         }
         Relationships: []
       }
       projects: {
         Row: {
+          assigned_freelancer_id: string | null
           budget_max: number | null
           budget_min: number | null
           category: string | null
+          completed_at: string | null
           created_at: string
           description: string
           id: string
           owner_id: string
           required_skills: string[] | null
+          started_at: string | null
           status: string
           timeline: string | null
           title: string
           updated_at: string
         }
         Insert: {
+          assigned_freelancer_id?: string | null
           budget_max?: number | null
           budget_min?: number | null
           category?: string | null
+          completed_at?: string | null
           created_at?: string
           description?: string
           id?: string
           owner_id: string
           required_skills?: string[] | null
+          started_at?: string | null
           status?: string
           timeline?: string | null
           title: string
           updated_at?: string
         }
         Update: {
+          assigned_freelancer_id?: string | null
           budget_max?: number | null
           budget_min?: number | null
           category?: string | null
+          completed_at?: string | null
           created_at?: string
           description?: string
           id?: string
           owner_id?: string
           required_skills?: string[] | null
+          started_at?: string | null
           status?: string
           timeline?: string | null
           title?: string
@@ -138,6 +313,44 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "proposals_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          project_id: string
+          rating: number
+          reviewee_id: string
+          reviewer_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          project_id: string
+          rating: number
+          reviewee_id: string
+          reviewer_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          project_id?: string
+          rating?: number
+          reviewee_id?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_project_id_fkey"
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"

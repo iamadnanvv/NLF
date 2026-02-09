@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/hooks/use-toast";
 import { X } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import ReviewsPanel from "@/components/dashboard/ReviewsPanel";
+import MessagingPanel from "@/components/dashboard/MessagingPanel";
 
 export default function Profile() {
   const { user, role, loading } = useAuth();
@@ -96,83 +98,91 @@ export default function Profile() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-4 py-10">
-        <Card className="mx-auto max-w-2xl">
-          <CardHeader>
-            <CardTitle>Your Profile</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSave} className="space-y-5">
-              <div className="space-y-2">
-                <Label>Full Name</Label>
-                <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} required />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Bio</Label>
-                <Textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Tell us about yourself..." rows={4} />
-              </div>
-
-              {role === "business_owner" && (
+        <div className="mx-auto max-w-4xl space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Your Profile</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSave} className="space-y-5">
                 <div className="space-y-2">
-                  <Label>Company Name</Label>
-                  <Input value={form.company_name} onChange={(e) => setForm({ ...form, company_name: e.target.value })} />
+                  <Label>Full Name</Label>
+                  <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} required />
                 </div>
-              )}
 
-              {role === "freelancer" && (
-                <>
+                <div className="space-y-2">
+                  <Label>Bio</Label>
+                  <Textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Tell us about yourself..." rows={4} />
+                </div>
+
+                {role === "business_owner" && (
                   <div className="space-y-2">
-                    <Label>Skills</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        value={skillInput}
-                        onChange={(e) => setSkillInput(e.target.value)}
-                        placeholder="Add a skill..."
-                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addSkill(); } }}
-                      />
-                      <Button type="button" variant="secondary" onClick={addSkill}>Add</Button>
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {form.skills.map((s) => (
-                        <Badge key={s} variant="secondary" className="gap-1">
-                          {s}
-                          <button type="button" onClick={() => removeSkill(s)}><X className="h-3 w-3" /></button>
-                        </Badge>
-                      ))}
-                    </div>
+                    <Label>Company Name</Label>
+                    <Input value={form.company_name} onChange={(e) => setForm({ ...form, company_name: e.target.value })} />
                   </div>
+                )}
 
-                  <div className="grid gap-4 sm:grid-cols-2">
+                {role === "freelancer" && (
+                  <>
                     <div className="space-y-2">
-                      <Label>Hourly Rate ($)</Label>
-                      <Input type="number" value={form.hourly_rate} onChange={(e) => setForm({ ...form, hourly_rate: e.target.value })} placeholder="50" />
+                      <Label>Skills</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          value={skillInput}
+                          onChange={(e) => setSkillInput(e.target.value)}
+                          placeholder="Add a skill..."
+                          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addSkill(); } }}
+                        />
+                        <Button type="button" variant="secondary" onClick={addSkill}>Add</Button>
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {form.skills.map((s) => (
+                          <Badge key={s} variant="secondary" className="gap-1">
+                            {s}
+                            <button type="button" onClick={() => removeSkill(s)}><X className="h-3 w-3" /></button>
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label>Hourly Rate ($)</Label>
+                        <Input type="number" value={form.hourly_rate} onChange={(e) => setForm({ ...form, hourly_rate: e.target.value })} placeholder="50" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Availability</Label>
+                        <Select value={form.availability} onValueChange={(v) => setForm({ ...form, availability: v })}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="available">Available</SelectItem>
+                            <SelectItem value="busy">Busy</SelectItem>
+                            <SelectItem value="unavailable">Unavailable</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
-                      <Label>Availability</Label>
-                      <Select value={form.availability} onValueChange={(v) => setForm({ ...form, availability: v })}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="available">Available</SelectItem>
-                          <SelectItem value="busy">Busy</SelectItem>
-                          <SelectItem value="unavailable">Unavailable</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Label>Portfolio URL</Label>
+                      <Input value={form.portfolio_url} onChange={(e) => setForm({ ...form, portfolio_url: e.target.value })} placeholder="https://..." />
                     </div>
-                  </div>
+                  </>
+                )}
 
-                  <div className="space-y-2">
-                    <Label>Portfolio URL</Label>
-                    <Input value={form.portfolio_url} onChange={(e) => setForm({ ...form, portfolio_url: e.target.value })} placeholder="https://..." />
-                  </div>
-                </>
-              )}
+                <Button type="submit" className="w-full" disabled={saving}>
+                  {saving ? "Saving..." : "Save Profile"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
 
-              <Button type="submit" className="w-full" disabled={saving}>
-                {saving ? "Saving..." : "Save Profile"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+          {/* Reviews Section */}
+          {user && <ReviewsPanel userId={user.id} />}
+
+          {/* Messaging Section */}
+          <MessagingPanel />
+        </div>
       </div>
     </div>
   );

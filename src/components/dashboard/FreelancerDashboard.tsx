@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
-import { DollarSign, Clock, Send } from "lucide-react";
+import { DollarSign, Clock, Send, Wand2, MessageSquare } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 export default function FreelancerDashboard() {
@@ -22,6 +22,7 @@ export default function FreelancerDashboard() {
   const [coverMessage, setCoverMessage] = useState("");
   const [proposedRate, setProposedRate] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [enhancingProposal, setEnhancingProposal] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -55,36 +56,84 @@ export default function FreelancerDashboard() {
       });
   }, [user, mySkills]);
 
+  const enhanceProposal = async () => {
+    if (!coverMessage.trim()) {
+      toast({ title: "Error", description: "Please write a cover message first", variant: "destructive" });
+      return;
+    }
+    const project = projects.find(p => p.id === applyProjectId);
+    setEnhancingProposal(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("enhance-proposal", {
+        body: { coverMessage, projectTitle: project?.title, projectDescription: project?.description },
+      });
+      if (error) {
+        toast({ title: "Error", description: error.message, variant: "destructive" });
+      } else {
+        setCoverMessage(data.enhanced_proposal);
+        toast({ title: "Proposal enhanced!", description: "Review and adjust as needed" });
+      }
+    } catch (err) {
+      toast({ title: "Error", description: "Failed to enhance proposal", variant: "destructive" });
+    } finally {
+      setEnhancingProposal(false);
+    }
+  };
+
   const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !applyProjectId) return;
     setSubmitting(true);
+    
+    const project = projects.find(p => p.id === applyProjectId);
+    const profile = await supabase.from("profiles").select("full_name").eq("user_id", user.id).single();
+    
     const { error } = await supabase.from("proposals").insert({
       project_id: applyProjectId,
       freelancer_id: user.id,
       cover_message: coverMessage,
       proposed_rate: proposedRate ? parseFloat(proposedRate) : null,
     });
-    setSubmitting(false);
+    
     if (error) {
+      setSubmitting(false);
       if (error.code === "23505") {
         toast({ title: "Already applied", description: "You have already submitted a proposal for this project.", variant: "destructive" });
       } else {
         toast({ title: "Error", description: error.message, variant: "destructive" });
       }
-    } else {
-      toast({ title: "Proposal submitted!" });
-      setCoverMessage("");
-      setProposedRate("");
-      setApplyProjectId(null);
-      // Refresh
-      const { data: proposals } = await supabase.from("proposals").select("*").eq("freelancer_id", user.id).order("created_at", { ascending: false });
-      if (proposals?.length) {
-        const projectIds = [...new Set(proposals.map(p => p.project_id))];
-        const { data: projectsData } = await supabase.from("projects").select("*").in("id", projectIds);
-        const projectMap = new Map((projectsData || []).map(p => [p.id, p]));
-        setMyProposals(proposals.map(p => ({ ...p, project: projectMap.get(p.project_id) })));
-      }
+      return;
+    }
+
+    // Send email notification to project owner
+    try {
+      await supabase.functions.invoke("send-proposal-notification", {
+        body: {
+          projectId: applyProjectId,
+          freelancerId: user.id,
+          projectTitle: project?.title || "Project",
+          freelancerName: profile.data?.full_name || "A freelancer",
+          proposedRate: proposedRate ? parseFloat(proposedRate) : null,
+          coverMessage,
+        },
+      });
+    } catch (emailErr) {
+      console.error("Failed to send notification email:", emailErr);
+    }
+
+    setSubmitting(false);
+    toast({ title: "Proposal submitted!" });
+    setCoverMessage("");
+    setProposedRate("");
+    setApplyProjectId(null);
+    
+    // Refresh proposals
+    const { data: proposals } = await supabase.from("proposals").select("*").eq("freelancer_id", user.id).order("created_at", { ascending: false });
+    if (proposals?.length) {
+      const projectIds = [...new Set(proposals.map(p => p.project_id))];
+      const { data: projectsData } = await supabase.from("projects").select("*").in("id", projectIds);
+      const projectMap = new Map((projectsData || []).map(p => [p.id, p]));
+      setMyProposals(proposals.map(p => ({ ...p, project: projectMap.get(p.project_id) })));
     }
   };
 
@@ -157,7 +206,13 @@ export default function FreelancerDashboard() {
                               <DialogHeader><DialogTitle>Submit Proposal</DialogTitle></DialogHeader>
                               <form onSubmit={handleApply} className="space-y-4">
                                 <div className="space-y-2">
-                                  <Label>Cover Message</Label>
+                                  <div className="flex items-center justify-between">
+                                    <Label>Cover Message</Label>
+                                    <Button type="button" variant="ghost" size="sm" onClick={enhanceProposal} disabled={enhancingProposal || !coverMessage.trim()} className="gap-1">
+                                      <Wand2 className="h-3 w-3" />
+                                      {enhancingProposal ? "Enhancing..." : "Enhance with AI"}
+                                    </Button>
+                                  </div>
                                   <Textarea value={coverMessage} onChange={(e) => setCoverMessage(e.target.value)} rows={4} required placeholder="Why are you a great fit for this project?" />
                                 </div>
                                 <div className="space-y-2">
