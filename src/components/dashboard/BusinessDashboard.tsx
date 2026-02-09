@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { Plus, X, Users, Clock, DollarSign } from "lucide-react";
+import { Plus, X, Users, Clock, DollarSign, Wand2 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import ProposalList from "./ProposalList";
 import MatchedFreelancers from "./MatchedFreelancers";
@@ -25,6 +25,7 @@ export default function BusinessDashboard() {
   const [form, setForm] = useState({ title: "", description: "", budget_min: "", budget_max: "", timeline: "", category: "", skills: [] as string[] });
   const [skillInput, setSkillInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [enhancing, setEnhancing] = useState(false);
 
   const fetchProjects = async () => {
     if (!user) return;
@@ -38,6 +39,29 @@ export default function BusinessDashboard() {
     const s = skillInput.trim().toLowerCase();
     if (s && !form.skills.includes(s)) setForm({ ...form, skills: [...form.skills, s] });
     setSkillInput("");
+  };
+
+  const enhanceDescription = async () => {
+    if (!form.description.trim()) {
+      toast({ title: "Error", description: "Please enter a description first", variant: "destructive" });
+      return;
+    }
+    setEnhancing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("enhance-description", {
+        body: { description: form.description, title: form.title },
+      });
+      if (error) {
+        toast({ title: "Error", description: error.message, variant: "destructive" });
+      } else {
+        setForm({ ...form, description: data.enhanced_description });
+        toast({ title: "Description enhanced!", description: "Review and adjust as needed" });
+      }
+    } catch (err) {
+      toast({ title: "Error", description: "Failed to enhance description", variant: "destructive" });
+    } finally {
+      setEnhancing(false);
+    }
   };
 
   const handlePost = async (e: React.FormEvent) => {
@@ -80,7 +104,16 @@ export default function BusinessDashboard() {
             <DialogHeader><DialogTitle>Post a New Project</DialogTitle></DialogHeader>
             <form onSubmit={handlePost} className="space-y-4">
               <div className="space-y-2"><Label>Title</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required /></div>
-              <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={4} required /></div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label>Description</Label>
+                  <Button type="button" variant="ghost" size="sm" onClick={enhanceDescription} disabled={enhancing || !form.description.trim()} className="gap-1">
+                    <Wand2 className="h-3 w-3" />
+                    {enhancing ? "Enhancing..." : "Enhance with AI"}
+                  </Button>
+                </div>
+                <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={4} required />
+              </div>
               <div className="space-y-2">
                 <Label>Category</Label>
                 <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
