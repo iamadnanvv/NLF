@@ -51,7 +51,7 @@ serve(async (req) => {
 
     // Verify signature
     const body = `${razorpay_order_id}|${razorpay_payment_id}`;
-    const expectedSignature = hmac("sha256", RAZORPAY_KEY_SECRET, body, "utf8", "hex");
+    const expectedSignature = await hmacSha256(RAZORPAY_KEY_SECRET, body);
 
     if (expectedSignature !== razorpay_signature) {
       return new Response(JSON.stringify({ error: "Invalid payment signature" }), {
