@@ -40,7 +40,7 @@ export default function Index() {
               className="mx-auto mb-10 max-w-xl text-lg text-muted-foreground"
               variants={fadeUp}
             >
-              Adaline intelligently matches freelancers with projects based on skills, so you spend less time searching and more time doing great work.
+              NLF intelligently matches freelancers with projects based on skills, so you spend less time searching and more time doing great work.
             </motion.p>
             <motion.div className="flex flex-col items-center justify-center gap-4 sm:flex-row" variants={fadeUp}>
               <Link to="/auth?tab=signup">
@@ -70,7 +70,7 @@ export default function Index() {
             viewport={{ once: true }}
             variants={fadeUp}
           >
-            <h2 className="mb-4 text-3xl md:text-4xl">How Adaline works</h2>
+            <h2 className="mb-4 text-3xl md:text-4xl">How NLF works</h2>
             <p className="text-muted-foreground">Three simple steps to start collaborating</p>
           </motion.div>
 
@@ -110,7 +110,7 @@ export default function Index() {
             viewport={{ once: true }}
             variants={fadeUp}
           >
-            <h2 className="mb-4 text-3xl md:text-4xl">Why choose Adaline</h2>
+            <h2 className="mb-4 text-3xl md:text-4xl">Why choose NLF</h2>
           </motion.div>
 
           <motion.div
@@ -152,7 +152,7 @@ export default function Index() {
           >
             <h2 className="mb-4 text-3xl md:text-4xl">Ready to get started?</h2>
             <p className="mx-auto mb-8 max-w-md text-muted-foreground">
-              Join thousands of freelancers and businesses already using Adaline.
+              Join thousands of freelancers and businesses already using NLF.
             </p>
             <Link to="/auth?tab=signup">
               <Button size="lg" className="gap-2">

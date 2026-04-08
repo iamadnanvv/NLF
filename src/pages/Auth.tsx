@@ -53,7 +53,7 @@ export default function Auth() {
       <div className="container mx-auto flex items-center justify-center px-4 py-20">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome to Adaline</CardTitle>
+            <CardTitle className="text-2xl">Welcome to NLF</CardTitle>
             <CardDescription>Sign in or create an account to get started</CardDescription>
           </CardHeader>
           <CardContent>

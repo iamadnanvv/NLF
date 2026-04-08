@@ -48,7 +48,7 @@ const handler = async (req: Request): Promise<Response> => {
           : 'Not specified';
 
     const emailResponse = await resend.emails.send({
-      from: "Adaline <notifications@lovable.app>",
+      from: "NLF <notifications@lovable.app>",
       to: [freelancerAuth.user.email],
       subject: `New Project Match: "${projectTitle}"`,
       html: `
@@ -70,10 +70,10 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
           </div>
           
-          <p style="color: #666; font-size: 14px;">Log in to your Adaline dashboard to view this project and submit a proposal!</p>
+          <p style="color: #666; font-size: 14px;">Log in to your NLF dashboard to view this project and submit a proposal!</p>
           
           <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
-          <p style="color: #999; font-size: 12px;">You're receiving this because your skills match this project on Adaline.</p>
+          <p style="color: #999; font-size: 12px;">You're receiving this because your skills match this project on NLF.</p>
         </div>
       `,
     });

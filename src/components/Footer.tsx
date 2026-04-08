@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid gap-8 md:grid-cols-4">
           <div>
-            <h3 className="mb-3 text-xl">Adaline</h3>
+            <h3 className="mb-3 text-xl">NLF</h3>
             <p className="text-sm text-muted-foreground">
               Connecting talent with opportunity through intelligent matching.
             </p>
@@ -34,7 +34,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Adaline. All rights reserved.
+          © {new Date().getFullYear()} NLF. All rights reserved.
         </div>
       </div>
     </footer>
