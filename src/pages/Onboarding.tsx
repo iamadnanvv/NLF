@@ -33,7 +33,7 @@ export default function Onboarding() {
       <Navbar />
       <div className="container mx-auto flex items-center justify-center px-4 py-20">
         <div className="w-full max-w-2xl text-center">
-          <h1 className="mb-2 text-3xl">How will you use Adaline?</h1>
+          <h1 className="mb-2 text-3xl">How will you use NLF?</h1>
           <p className="mb-10 text-muted-foreground">Choose your role to personalize your experience</p>
 
           <div className="grid gap-6 md:grid-cols-2">

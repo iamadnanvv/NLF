@@ -49,7 +49,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailResponse = await resend.emails.send({
-      from: "Adaline <notifications@lovable.app>",
+      from: "NLF <notifications@lovable.app>",
       to: [ownerAuth.user.email],
       subject: `New Proposal for "${projectTitle}"`,
       html: `
@@ -64,10 +64,10 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="margin: 10px 0 0 0; color: #333; white-space: pre-wrap;">${coverMessage}</p>
           </div>
           
-          <p style="color: #666; font-size: 14px;">Log in to your Adaline dashboard to review and respond to this proposal.</p>
+          <p style="color: #666; font-size: 14px;">Log in to your NLF dashboard to review and respond to this proposal.</p>
           
           <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
-          <p style="color: #999; font-size: 12px;">You're receiving this because you posted a project on Adaline.</p>
+          <p style="color: #999; font-size: 12px;">You're receiving this because you posted a project on NLF.</p>
         </div>
       `,
     });

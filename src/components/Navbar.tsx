@@ -18,7 +18,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="text-2xl font-bold tracking-tight" style={{ fontFamily: "'DM Serif Display', serif" }}>
-          Adaline
+          NLF
         </Link>
 
         {/* Desktop */}
