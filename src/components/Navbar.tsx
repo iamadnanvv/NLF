@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { LogOut, User, Briefcase, Menu, X } from "lucide-react";
+import { LogOut, User, Briefcase, Menu, X, MessageSquare } from "lucide-react";
 import { useState } from "react";
 
 export default function Navbar() {
@@ -29,6 +29,11 @@ export default function Navbar() {
                 <Button variant="ghost" size="sm">
                   {role === "business_owner" ? <Briefcase className="mr-2 h-4 w-4" /> : <User className="mr-2 h-4 w-4" />}
                   Dashboard
+                </Button>
+              </Link>
+              <Link to="/messages">
+                <Button variant="ghost" size="sm">
+                  <MessageSquare className="mr-2 h-4 w-4" /> Messages
                 </Button>
               </Link>
               <Link to="/profile">
@@ -60,6 +65,11 @@ export default function Navbar() {
               <>
                 <Link to="/dashboard" onClick={() => setOpen(false)}>
                   <Button variant="ghost" className="w-full justify-start">Dashboard</Button>
+                </Link>
+                <Link to="/messages" onClick={() => setOpen(false)}>
+                  <Button variant="ghost" className="w-full justify-start">
+                    <MessageSquare className="mr-2 h-4 w-4" /> Messages
+                  </Button>
                 </Link>
                 <Link to="/profile" onClick={() => setOpen(false)}>
                   <Button variant="ghost" className="w-full justify-start">Profile</Button>
