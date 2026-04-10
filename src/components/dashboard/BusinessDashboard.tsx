@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
-import { Plus, X, Users, Clock, DollarSign, Wand2 } from "lucide-react";
+import { Plus, X, Clock, DollarSign, Wand2, BarChart3 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import ProposalList from "./ProposalList";
 import MatchedFreelancers from "./MatchedFreelancers";
@@ -91,7 +92,7 @@ export default function BusinessDashboard() {
   };
 
   return (
-    <Tabs defaultValue="projects">
+    <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl">Your Projects</h1>
@@ -145,54 +146,67 @@ export default function BusinessDashboard() {
         </Dialog>
       </div>
 
-      {projects.length === 0 ? (
-        <Card className="py-16 text-center">
-          <CardContent>
-            <p className="text-muted-foreground">You haven't posted any projects yet. Click "Post a Project" to get started.</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-4 lg:grid-cols-2">
-          {projects.map((p) => (
-            <Card key={p.id} className={`cursor-pointer transition-all hover:shadow-md ${selectedProject === p.id ? 'ring-2 ring-primary' : ''}`} onClick={() => setSelectedProject(selectedProject === p.id ? null : p.id)}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-lg" style={{ fontFamily: "'DM Sans', sans-serif" }}>{p.title}</CardTitle>
-                    <CardDescription className="mt-1">{p.category}</CardDescription>
-                  </div>
-                  <Badge variant={p.status === "open" ? "default" : "secondary"}>{p.status}</Badge>
-                </div>
-              </CardHeader>
+      <Tabs defaultValue="projects">
+        <TabsList>
+          <TabsTrigger value="projects">Projects</TabsTrigger>
+          <TabsTrigger value="analytics" className="gap-1"><BarChart3 className="h-4 w-4" /> Analytics</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="projects" className="mt-6">
+          {projects.length === 0 ? (
+            <Card className="py-16 text-center">
               <CardContent>
-                <p className="mb-4 text-sm text-muted-foreground line-clamp-2">{p.description}</p>
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {p.required_skills?.map((s) => <Badge key={s} variant="outline" className="text-xs">{s}</Badge>)}
-                </div>
-                <div className="flex gap-4 text-xs text-muted-foreground">
-                  {(p.budget_min || p.budget_max) && (
-                    <span className="flex items-center gap-1"><DollarSign className="h-3 w-3" />${p.budget_min || 0} - ${p.budget_max || "∞"}</span>
-                  )}
-                  {p.timeline && <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{p.timeline}</span>}
-                </div>
+                <p className="text-muted-foreground">You haven't posted any projects yet. Click "Post a Project" to get started.</p>
               </CardContent>
             </Card>
-          ))}
-        </div>
-      )}
+          ) : (
+            <div className="grid gap-4 lg:grid-cols-2">
+              {projects.map((p) => (
+                <Card key={p.id} className={`cursor-pointer transition-all hover:shadow-md ${selectedProject === p.id ? 'ring-2 ring-primary' : ''}`} onClick={() => setSelectedProject(selectedProject === p.id ? null : p.id)}>
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-lg" style={{ fontFamily: "'DM Sans', sans-serif" }}>{p.title}</CardTitle>
+                        <CardDescription className="mt-1">{p.category}</CardDescription>
+                      </div>
+                      <Badge variant={p.status === "open" ? "default" : "secondary"}>{p.status}</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="mb-4 text-sm text-muted-foreground line-clamp-2">{p.description}</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {p.required_skills?.map((s) => <Badge key={s} variant="outline" className="text-xs">{s}</Badge>)}
+                    </div>
+                    <div className="flex gap-4 text-xs text-muted-foreground">
+                      {(p.budget_min || p.budget_max) && (
+                        <span className="flex items-center gap-1"><DollarSign className="h-3 w-3" />${p.budget_min || 0} - ${p.budget_max || "∞"}</span>
+                      )}
+                      {p.timeline && <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{p.timeline}</span>}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
 
-      {selectedProject && (
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <div>
-            <h2 className="mb-4 text-xl font-semibold" style={{ fontFamily: "'DM Sans', sans-serif" }}>Proposals</h2>
-            <ProposalList projectId={selectedProject} />
-          </div>
-          <div>
-            <h2 className="mb-4 text-xl font-semibold" style={{ fontFamily: "'DM Sans', sans-serif" }}>Matched Freelancers</h2>
-            <MatchedFreelancers projectId={selectedProject} requiredSkills={projects.find(p => p.id === selectedProject)?.required_skills || []} />
-          </div>
-        </div>
-      )}
+          {selectedProject && (
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+              <div>
+                <h2 className="mb-4 text-xl font-semibold" style={{ fontFamily: "'DM Sans', sans-serif" }}>Proposals</h2>
+                <ProposalList projectId={selectedProject} />
+              </div>
+              <div>
+                <h2 className="mb-4 text-xl font-semibold" style={{ fontFamily: "'DM Sans', sans-serif" }}>Matched Freelancers</h2>
+                <MatchedFreelancers projectId={selectedProject} requiredSkills={projects.find(p => p.id === selectedProject)?.required_skills || []} />
+              </div>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="analytics" className="mt-6">
+          <AnalyticsPanel role="business_owner" />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
