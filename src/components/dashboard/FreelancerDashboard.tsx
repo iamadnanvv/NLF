@@ -10,8 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
-import { DollarSign, Clock, Send, Wand2, MessageSquare } from "lucide-react";
+import { DollarSign, Clock, Send, Wand2, BarChart3 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import AnalyticsPanel from "./AnalyticsPanel";
 
 export default function FreelancerDashboard() {
   const { user } = useAuth();
@@ -152,6 +153,7 @@ export default function FreelancerDashboard() {
         <TabsList>
           <TabsTrigger value="projects">Browse Projects</TabsTrigger>
           <TabsTrigger value="proposals">My Proposals ({myProposals.length})</TabsTrigger>
+          <TabsTrigger value="analytics" className="gap-1"><BarChart3 className="h-4 w-4" /> Analytics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="projects" className="mt-6">
@@ -256,6 +258,10 @@ export default function FreelancerDashboard() {
               ))}
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="analytics" className="mt-6">
+          <AnalyticsPanel role="freelancer" />
         </TabsContent>
       </Tabs>
     </div>
