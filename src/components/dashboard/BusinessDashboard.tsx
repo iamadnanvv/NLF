@@ -14,6 +14,7 @@ import { Plus, X, Users, Clock, DollarSign, Wand2 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import ProposalList from "./ProposalList";
 import MatchedFreelancers from "./MatchedFreelancers";
+import AnalyticsPanel from "./AnalyticsPanel";
 
 const CATEGORIES = ["Design", "Development", "Marketing", "Writing", "Data", "Other"];
 
@@ -90,7 +91,7 @@ export default function BusinessDashboard() {
   };
 
   return (
-    <div>
+    <Tabs defaultValue="projects">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl">Your Projects</h1>
